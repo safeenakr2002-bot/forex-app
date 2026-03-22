@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0A0A0F">
+<title>TradeKing Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #FFD700;
+  --gold2: #FFA500;
+  --dark: #0A0A0F;
+  --dark2: #111118;
+  --dark3: #1C1C28;
+  --dark4: #242435;
+  --green: #00E676;
+  --green2: #00C853;
+  --red: #FF5252;
+  --blue: #448AFF;
+  --purple: #AA44FF;
+  --text: #F0F0FA;
+  --muted: #7070A0;
+  --card-border: rgba(255,255,255,0.06);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--dark);
+  font-family: 'Tajawal', sans-serif;
+  color: var(--text);
+  user-select: none;
+}
+
+/* ===== APP SHELL ===== */
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  max-width: 430px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  background: var(--dark);
+}
+
+/* STATUS BAR */
+.status-bar {
+  height: 44px;
+  background: var(--dark);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
+.status-time { font-size: 0.85rem; font-weight: 700; }
+.status-icons { font-size: 0.75rem; display: flex; gap: 5px; align-items: center; }
+
+/* PAGES */
+.pages {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.page {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  padding-bottom: 90px;
+}
+.page.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* BOTTOM NAV */
+.bottom-nav {
+  height: 65px;
+  background: var(--dark2);
+  border-top: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding-bottom: var(--safe-bottom);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  border-radius: 12px;
+  transition: all 0.2s;
+  cursor: pointer;
+  flex: 1;
+}
+.nav-icon { font-size: 1.4rem; transition: transform 0.2s; }
+.nav-label { font-size: 0.65rem; color: var(--muted); transition: color 0.2s; font-weight: 600; }
+.nav-item.active .nav-icon { transform: scale(1.15); }
+.nav-item.active .nav-label { color: var(--gold); }
+
+/* ===== HOME PAGE ===== */
+.home-header {
+  padding: 20px 20px 10px;
+  background: linear-gradient(180deg, rgba(255,215,0,0.06) 0%, transparent 100%);
+}
+
+.home-greeting {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.home-name {
+  font-size: 1.6rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* XP Card */
+.xp-card {
+  margin: 15px 20px;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border-radius: 20px;
+  padding: 20px;
+  border: 1px solid rgba(255,215,0,0.15);
+  position: relative;
+  overflow: hidden;
+}
+.xp-card::before {
+  content: '👑';
+  position: absolute;
+  left: -5px;
+  top: -10px;
+  font-size: 80px;
+  opacity: 0.05;
+}
+.xp-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+.xp-level { font-size: 0.75rem; color: var(--gold); font-weight: 700; letter-spacing: 2px; }
+.xp-stage { font-size: 1rem; font-weight: 800; color: var(--text); margin-top: 3px; }
+.xp-badge {
+  background: rgba(255,215,0,0.15);
+  border: 1px solid rgba(255,215,0,0.3);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 0.75rem;
+  color: var(--gold);
+  font-weight: 700;
+}
+.xp-bar-label { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.xp-bar-label span { font-size: 0.75rem; color: var(--muted); }
+.xp-bar-track {
+  height: 10px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold2), var(--gold));
+  border-radius: 10px;
+  transition: width 1s ease;
+}
+
+/* Quick Stats */
+.section-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 0 20px;
+  margin: 20px 0 12px;
+}
+
+.stats-row {
+  display: flex;
+  gap: 12px;
+  padding: 0 20px;
+  margin-bottom: 5px;
+}
+
+.stat-card {
+  flex: 1;
+  background: var(--dark3);
+  border-radius: 16px;
+  padding: 15px 12px;
+  border: 1px solid var(--card-border);
+  text-align: center;
+}
+.stat-icon { font-size: 1.4rem; margin-bottom: 6px; }
+.stat-val { font-size: 1.3rem; font-weight: 900; margin-bottom: 3px; }
+.stat-label { font-size: 0.7rem; color: var(--muted); font-weight: 600; }
+
+/* Today task */
+.today-card {
+  margin: 15px 20px;
+  background: var(--dark3);
+  border-radius: 18px;
+  padding: 18px;
+  border: 1px solid var(--card-border);
+}
+.today-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.today-title { font-size: 0.9rem; font-weight: 800; }
+.today-date { font-size: 0.72rem; color: var(--muted); }
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.task-item:last-child { border-bottom: none; padding-bottom: 0; }
+.task-check {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  border: 2px solid rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.task-check.done {
+  background: var(--green2);
+  border-color: var(--green2);
+}
+.task-text { flex: 1; font-size: 0.85rem; }
+.task-text.done { text-decoration: line-through; color: var(--muted); }
+.task-xp { font-size: 0.7rem; color: var(--gold); font-weight: 700; }
+
+/* ===== ROADMAP PAGE ===== */
+.road-header {
+  padding: 20px 20px 5px;
+  background: linear-gradient(180deg, rgba(68,136,255,0.06) 0%, transparent 100%);
+}
+.road-title { font-size: 1.4rem; font-weight: 900; margin-bottom: 4px; }
+.road-sub { font-size: 0.82rem; color: var(--muted); }
+
+.road-timeline {
+  padding: 15px 20px;
+  position: relative;
+}
+
+.road-stage {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 5px;
+  position: relative;
+}
+
+.stage-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 44px;
+  flex-shrink: 0;
+}
+
+.stage-dot {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 900;
+  flex-shrink: 0;
+  z-index: 1;
+  border: 2px solid transparent;
+  transition: all 0.3s;
+}
+
+.stage-line {
+  width: 2px;
+  flex: 1;
+  min-height: 30px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0.04));
+  margin: 5px 0;
+}
+
+.stage-content {
+  flex: 1;
+  background: var(--dark3);
+  border-radius: 16px;
+  margin-bottom: 20px;
+  border: 1px solid var(--card-border);
+  overflow: hidden;
+  transition: all 0.2s;
+}
+.stage-content.current {
+  border-color: rgba(255,215,0,0.25);
+  box-shadow: 0 4px 20px rgba(255,215,0,0.08);
+}
+
+.stage-head {
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+.stage-head-title { font-size: 0.9rem; font-weight: 800; }
+.stage-head-dur { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+.stage-arrow { font-size: 0.8rem; color: var(--muted); transition: transform 0.3s; }
+.stage-content.open .stage-arrow { transform: rotate(180deg); }
+
+.stage-body-inner {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+.stage-content.open .stage-body-inner { max-height: 600px; }
+
+.stage-inner-content {
+  padding: 0 16px 16px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.channel-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--dark4);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-top: 10px;
+}
+.channel-pill-icon { font-size: 1.1rem; }
+.channel-pill-info { flex: 1; }
+.channel-pill-name { font-size: 0.82rem; font-weight: 700; }
+.channel-pill-desc { font-size: 0.7rem; color: var(--muted); margin-top: 1px; }
+
+.topics-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+.topic-chip {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 0.7rem;
+  color: var(--text);
+}
+
+/* ===== CHANNELS PAGE ===== */
+.ch-header {
+  padding: 20px 20px 5px;
+}
+.ch-title { font-size: 1.4rem; font-weight: 900; margin-bottom: 4px; }
+.ch-sub { font-size: 0.82rem; color: var(--muted); margin-bottom: 15px; }
+
+.filter-row {
+  display: flex;
+  gap: 8px;
+  padding: 0 20px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 15px;
+  scrollbar-width: none;
+}
+.filter-row::-webkit-scrollbar { display: none; }
+.filter-btn {
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: var(--dark3);
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Tajawal', sans-serif;
+}
+.filter-btn.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #000;
+}
+
+.channel-card {
+  margin: 0 20px 14px;
+  background: var(--dark3);
+  border-radius: 18px;
+  padding: 16px;
+  border: 1px solid var(--card-border);
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+  transition: transform 0.15s;
+  cursor: pointer;
+}
+.channel-card:active { transform: scale(0.98); }
+
+.ch-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.ch-info { flex: 1; }
+.ch-name { font-size: 0.95rem; font-weight: 800; margin-bottom: 4px; }
+.ch-creator { font-size: 0.72rem; color: var(--muted); margin-bottom: 6px; }
+.ch-desc { font-size: 0.78rem; color: var(--text); line-height: 1.5; margin-bottom: 8px; }
+
+.ch-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.ch-tag {
+  font-size: 0.65rem;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.ch-level-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 20px;
+  align-self: flex-start;
+  white-space: nowrap;
+}
+
+/* ===== RULES PAGE ===== */
+.rules-header {
+  padding: 20px 20px 10px;
+  background: linear-gradient(180deg, rgba(255,68,68,0.05) 0%, transparent 100%);
+}
+.rules-title { font-size: 1.4rem; font-weight: 900; margin-bottom: 4px; }
+.rules-sub { font-size: 0.82rem; color: var(--muted); }
+
+.rule-big {
+  margin: 10px 20px;
+  background: var(--dark3);
+  border-radius: 18px;
+  padding: 18px;
+  border: 1px solid var(--card-border);
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  animation: slideIn 0.4s ease both;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.rule-big-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+.rule-big-content { flex: 1; }
+.rule-big-title { font-size: 0.95rem; font-weight: 800; margin-bottom: 5px; }
+.rule-big-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+
+.warning-banner {
+  margin: 10px 20px;
+  background: rgba(255,68,68,0.08);
+  border: 1px solid rgba(255,68,68,0.2);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.warning-banner-icon { font-size: 1.8rem; }
+.warning-banner-text { flex: 1; font-size: 0.82rem; color: #ffaaaa; line-height: 1.6; }
+.warning-banner-text strong { color: #ff6666; display: block; margin-bottom: 3px; font-size: 0.9rem; }
+
+/* ===== PROGRESS CHECK ===== */
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.check-item:active { background: rgba(255,255,255,0.03); }
+.check-box {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  border: 2px solid rgba(255,255,255,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+.check-box.checked {
+  background: var(--green2);
+  border-color: var(--green2);
+}
+.check-label { flex: 1; font-size: 0.85rem; }
+.check-label.checked { text-decoration: line-through; color: var(--muted); }
+.check-stage-badge { font-size: 0.65rem; padding: 2px 8px; border-radius: 10px; font-weight: 700; }
+
+.progress-overview {
+  margin: 15px 20px;
+  background: var(--dark3);
+  border-radius: 18px;
+  padding: 18px;
+  border: 1px solid var(--card-border);
+}
+.po-title { font-size: 0.85rem; font-weight: 800; margin-bottom: 14px; }
+.po-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.po-label { font-size: 0.75rem; color: var(--muted); width: 90px; text-align: right; }
+.po-bar { flex: 1; height: 8px; background: rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden; }
+.po-fill { height: 100%; border-radius: 10px; }
+.po-pct { font-size: 0.72rem; font-weight: 700; width: 30px; }
+
+/* Misc */
+.spacer { height: 10px; }
+.section-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 15px 20px 8px;
+}
+
+.glow-gold { color: var(--gold); }
+.glow-green { color: var(--green); }
+.glow-blue { color: var(--blue); }
+.glow-purple { color: var(--purple); }
+.glow-red { color: var(--red); }
+
+/* animations */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.live-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--green);
+  display: inline-block; margin-left: 5px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <span class="status-time" id="clock">٩:٤١</span>
+    <span class="status-icons">📶 🔋</span>
+  </div>
+
+  <!-- PAGES -->
+  <div class="pages">
+
+    <!-- ===== HOME ===== -->
+    <div class="page active" id="page-home">
+
+      <div class="home-header">
+        <div class="home-greeting">خێرهاتیت،</div>
+        <div class="home-name">👑 سافین</div>
+      </div>
+
+      <!-- XP Card -->
+      <div class="xp-card">
+        <div class="xp-top">
+          <div>
+            <div class="xp-level">ئاست ١ — BEGINNER</div>
+            <div class="xp-stage">مەرحەلەی یەکەم: بنچینەکان</div>
+          </div>
+          <div class="xp-badge">مانگی ١-٢</div>
+        </div>
+        <div class="xp-bar-label">
+          <span>پێشکەوتنی گشتی</span>
+          <span id="xp-text">٠ / ٢٤ مانگ</span>
+        </div>
+        <div class="xp-bar-track">
+          <div class="xp-bar-fill" style="width: 4%;" id="xp-fill"></div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="section-title">ئەمڕۆی تۆ</div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon">✅</div>
+          <div class="stat-val glow-green" id="done-count">٠</div>
+          <div class="stat-label">تامامکراو</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-val glow-gold" id="streak-count">١</div>
+          <div class="stat-label">ڕۆژی پشت هەم</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📚</div>
+          <div class="stat-val glow-blue">٥</div>
+          <div class="stat-label">کەناڵی</div>
+        </div>
+      </div>
+
+      <!-- Today tasks -->
+      <div class="today-card">
+        <div class="today-header">
+          <div class="today-title">📋 ئەرکی ئەمڕۆ</div>
+          <div class="today-date" id="today-date"></div>
+        </div>
+
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-check">✓</div>
+          <div class="task-text">Rayner Teo — فۆرێکس چیە؟ (ڤیدیۆ ١)</div>
+          <div class="task-xp">+١٠XP</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-check">✓</div>
+          <div class="task-text">Pip و Lot فێربە</div>
+          <div class="task-xp">+١٠XP</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-check">✓</div>
+          <div class="task-text">Demo Account دروست بکە</div>
+          <div class="task-xp">+٢٠XP</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-check">✓</div>
+          <div class="task-text">چارتی EUR/USD ببینە</div>
+          <div class="task-xp">+١٠XP</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this)">
+          <div class="task-check">✓</div>
+          <div class="task-text">جێرناڵ — ئەمڕۆ چیت فێربوو بنووسە</div>
+          <div class="task-xp">+١٥XP</div>
+        </div>
+      </div>
+
+      <!-- Tip of day -->
+      <div class="section-title">💡 تێبینی ئەمڕۆ</div>
+      <div style="margin:0 20px 15px; background:linear-gradient(135deg,rgba(68,136,255,0.1),rgba(170,68,255,0.08)); border-radius:16px; padding:16px; border:1px solid rgba(68,136,255,0.15);">
+        <div style="font-size:0.82rem; line-height:1.7; color:var(--text);">
+          🧠 <strong style="color:var(--blue);">بیرت لێبێت:</strong> باشترین تریدەرانی جیهان لەم ئاستەوە دەستیان پێکردووە. ئاستت ٠ بێت یان ١٠٠، کاتت کەم یان زۆر — تەنها ئەوەی گرنگە هەر ڕۆژ ئەرکەکانت بکەیت! 🚀
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== ROADMAP ===== -->
+    <div class="page" id="page-road">
+
+      <div class="road-header">
+        <div class="road-title">🗺️ ڕێڕەوی تریدینگ</div>
+        <div class="road-sub">٢٤ مانگ — لە سفیر ئەکرێ بۆ باشترین تریدەری جیهان</div>
+      </div>
+
+      <div class="road-timeline">
+
+        <!-- Stage 1 -->
+        <div class="road-stage">
+          <div class="stage-left">
+            <div class="stage-dot" style="background:linear-gradient(135deg,#448AFF,#2255CC); color:white; border-color:#448AFF;">١</div>
+            <div class="stage-line"></div>
+          </div>
+          <div class="stage-content current open" onclick="toggleStage(this)">
+            <div class="stage-head">
+              <div>
+                <div class="stage-head-title" style="color:#448AFF;">بنچینەکان — Basics</div>
+                <div class="stage-head-dur">📅 مانگی ١-٢ &nbsp;|&nbsp; ئازاد تازەکار</div>
+              </div>
+              <span class="stage-arrow">▼</span>
+            </div>
+            <div class="stage-body-inner">
+              <div class="stage-inner-content">
+                <div class="channel-pill">
+                  <div class="channel-pill-icon">▶️</div>
+                  <div class="channel-pill-info">
+                    <div class="channel-pill-name">Rayner Teo</div>
+                    <div class="channel-pill-desc">باشترین بۆ تازەکاران — ئاسان و ڕوون</div>
+                  </div>
+                </div>
+                <div class="topics-wrap">
+                  <span class="topic-chip">📌 فۆرێکس چیە</span>
+                  <span class="topic-chip">📌 Pip & Lot</span>
+                  <span class="topic-chip">📌 Demo Account</span>
+                  <span class="topic-chip">📌 MT4/MT5</span>
+                  <span class="topic-chip">📌 جووت پێرەکان</span>
+                  <span class="topic-chip">📌 بروکەر</span>
+                  <span class="topic-chip">📌 سێشن</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stage 2 -->
+        <div class="road-stage">
+          <div class="stage-left">
+            <div class="stage-dot" style="background:linear-gradient(135deg,#00CC66,#009944); color:white; border-color:#00CC66;">٢</div>
+            <div class="stage-line"></div>
+          </div>
+          <div class="stage-content" onclick="toggleStage(this)">
+            <div class="stage-head">
+              <div>
+                <div class="stage-head-title" style="color:#00CC66;">تەکنیکاڵ — Technical</div>
+                <div class="stage-head-dur">📅 مانگی ٣-٥ &nbsp;|&nbsp; ناوەند</div>
+              </div>
+              <span class="stage-arrow">▼</span>
+            </div>
+            <div class="stage-body-inner">
+              <div class="stage-inner-content">
+                <div class="channel-pill">
+                  <div class="channel-pill-icon">▶️</div>
+                  <div class="channel-pill-info">
+                    <div class="channel-pill-name">The Trading Geek — Brad Goh</div>
+                    <div class="channel-pill-desc">SMC و پرایس ئەکشن</div>
+                  </div>
+                </div>
+                <div class="channel-pill">
+                  <div class="channel-pill-icon">▶️</div>
+                  <div class="channel-pill-info">
+                    <div class="channel-pill-name">ForexSignals TV</div>
+                    <div class="channel-pill-desc">لایڤ ئەنالیزی ڕۆژانە</div>
+                  </div>
+                </div>
+                <div class="topics-wrap">
+                  <span class="topic-chip">📊 Candlestick</span>
+                  <span class="topic-chip">📊 Support/Resistance</span>
+                  <span class="topic-chip">📊 Trend</span>
+                  <span class="topic-chip">📊 RSI & MACD</span>
+                  <span class="topic-chip">📊 Fibonacci</span>
+                  <span class="topic-chip">📊 Multi-Timeframe</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stage 3 -->
+        <div class="road-stage">
+          <div class="stage-left">
+            <div class="stage-dot" style="background:linear-gradient(135deg,#FF8800,#CC6600); color:white; border-color:#FF8800;">٣</div>
+            <div class="stage-line"></div>
+          </div>
+          <div class="stage-content" onclick="toggleStage(this)">
+            <div class="stage-head">
+              <div>
+                <div class="stage-head-title" style="color:#FF8800;">ستراتیژی — Strategy</div>
+                <div class="stage-head-dur">📅 مانگی ٦-١٠ &nbsp;|&nbsp; ناوەند-پێشکەوتوو</div>
+              </div>
+              <span class="stage-arrow">▼</span>
+            </div>
+            <div class="stage-body-inner">
+              <div class="stage-inner-content">
+                <div class="channel-pill">
+                  <div class="channel-pill-icon">▶️</div>
+                  <div class="channel-pill-info">
+                    <div class="channel-pill-name">No Nonsense Forex — VP</div>
+                    <div class="channel-pill-desc">سیستەمی تریدی تەواو</div>
+                  </div>
+                </div>
+                <div class="channel-pill">
+                  <div class="channel-pill-icon">▶️</div>
+                  <div class="channel-pill-info">
+                    <div class="channel-pill-name">TraderNick</div>
+                    <div class="channel-pill-desc">جێرناڵ و ئەنالیزی ئاشکرا</div>
+                  </div>
+                </div>
+                <div class="topics-wrap">
+                  <span class="topic-chip">🎯 Risk/Reward</span>
+                  <span class="topic-chip">🎯 Position Size</span>
+                  <span class="topic-chip">🎯 Stop Loss</span>
+                  <span class="topic-chip">🎯 Trade Journal</span>
+                  <span class="topic-chip">🎯 Backtesting</span>
+                  <span class="topic-chip">🎯 سیستەمی خۆت</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stage 4 -->
+        <div class="road-stage">
+          <div class="stage-left">
+            <div class="stage-dot" style="background:linear-gradient(135deg,#AA44FF,#7722CC); color:white; border-color:#AA44FF;">٤</div>
+            <div class="stage-line"></div>
+          </div>
+          <div class="stage-content" onclick="toggleStage(this)">
+            <div class="stage-head">
+              <div>
+                <div class="stage-head-title" style="color:#AA44FF;">ئینستیتیوشناڵ — Institutional</div>
+                <div class="stage-head-dur">📅 مانگی ١١-١٨ &nbsp;|&nbsp; پێشکەوتوو</div>
+              </div>
+              <span class="stage-arrow">▼</span>
+            </div>
+            <div class="stage-body-inner">
+              <div class="stage-inner-content">
+                <div class="channel-pill">
+                  <div class="channel-pill-icon">▶️</div>
+                  <div class="channel-pill-info">
+                    <div class="channel-pill-name">ICT — Inner Circle Trader</div>
+                    <div class="channel-pill-desc">دامەزرێنەری SMC</div>
+                  </div>
+                </div>
+                <div class="channel-pill">
+                  <div class="channel-pill-icon">▶️</div>
+                  <div class="channel-pill-info">
+                    <div class="channel-pill-name">Anton Kreil — ITPM</div>
+                    <div class="channel-pill-desc">Goldman Sachs — پیشەییترین</div>
+                  </div>
+                </div>
+                <div class="topics-wrap">
+                  <span class="topic-chip">🏦 Order Blocks</span>
+                  <span class="topic-chip">🏦 Liquidity</span>
+                  <span class="topic-chip">🏦 Smart Money</span>
+                  <span class="topic-chip">🏦 Market Structure</span>
+                  <span class="topic-chip">🏦 COT Report</span>
+                  <span class="topic-chip">🏦 پسیکۆلۆژی</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stage 5 -->
+        <div class="road-stage">
+          <div class="stage-left">
+            <div class="stage-dot" style="background:linear-gradient(135deg,#FFD700,#FFA500); color:#000; border-color:#FFD700;">👑</div>
+          </div>
+          <div class="stage-content" onclick="toggleStage(this)">
+            <div class="stage-head">
+              <div>
+                <div class="stage-head-title" style="color:#FFD700;">ماستەر — Master</div>
+                <div class="stage-head-dur">📅 مانگی ١٩-٢٤ &nbsp;|&nbsp; پرۆفێشناڵ</div>
+              </div>
+              <span class="stage-arrow">▼</span>
+            </div>
+            <div class="stage-body-inner">
+              <div class="stage-inner-content">
+                <div class="channel-pill">
+                  <div class="channel-pill-icon">▶️</div>
+                  <div class="channel-pill-info">
+                    <div class="channel-pill-name">Stacey Burke Trading</div>
+                    <div class="channel-pill-desc">٢٠+ ساڵ ئەزموون</div>
+                  </div>
+                </div>
+                <div class="channel-pill">
+                  <div class="channel-pill-icon">▶️</div>
+                  <div class="channel-pill-info">
+                    <div class="channel-pill-name">Kharitonov Trading</div>
+                    <div class="channel-pill-desc">ملتی تایمفریم + لیکوئیدیتی</div>
+                  </div>
+                </div>
+                <div class="topics-wrap">
+                  <span class="topic-chip">🚀 Prop Firm / FTMO</span>
+                  <span class="topic-chip">🚀 ئەکاونتی گەورە</span>
+                  <span class="topic-chip">🚀 Scaling Up</span>
+                  <span class="topic-chip">🚀 Full-Time Trading</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== CHANNELS ===== -->
+    <div class="page" id="page-channels">
+      <div class="ch-header">
+        <div class="ch-title">📺 کەناڵەکان</div>
+        <div class="ch-sub">١٠ کەناڵی هەڵبژێردراو بۆ تۆ</div>
+      </div>
+
+      <div class="filter-row">
+        <button class="filter-btn active" onclick="filterChannels('all', this)">هەموو</button>
+        <button class="filter-btn" onclick="filterChannels('beginner', this)">تازەکار</button>
+        <button class="filter-btn" onclick="filterChannels('mid', this)">ناوەند</button>
+        <button class="filter-btn" onclick="filterChannels('advanced', this)">پێشکەوتوو</button>
+        <button class="filter-btn" onclick="filterChannels('pro', this)">پرۆ</button>
+      </div>
+
+      <div id="channels-list">
+
+        <div class="channel-card" data-level="beginner">
+          <div class="ch-avatar" style="background:rgba(68,136,255,0.12)">📈</div>
+          <div class="ch-info">
+            <div class="ch-name">Rayner Teo</div>
+            <div class="ch-creator">TradingwithRayner • ١.٥م بەشداربوو</div>
+            <div class="ch-desc">باشترین کەناڵ بۆ تازەکاران — بنچینەی فۆرێکس بە شێوەی ئاسان و ڕوون فێر دەکات</div>
+            <div class="ch-tags">
+              <span class="ch-tag" style="background:rgba(68,136,255,0.12);color:#448AFF;">Price Action</span>
+              <span class="ch-tag" style="background:rgba(68,136,255,0.12);color:#448AFF;">Basics</span>
+            </div>
+          </div>
+          <div class="ch-level-badge" style="background:rgba(68,136,255,0.15);color:#448AFF;">⭐ تازەکار</div>
+        </div>
+
+        <div class="channel-card" data-level="mid">
+          <div class="ch-avatar" style="background:rgba(255,215,0,0.1)">💹</div>
+          <div class="ch-info">
+            <div class="ch-name">The Trading Geek</div>
+            <div class="ch-creator">Brad Goh • ١.٥٢م بەشداربوو</div>
+            <div class="ch-desc">SMC و پرایس ئەکشن — بانکەکان چۆن بازاڕ کۆنترۆڵ دەکەن فێر دەکات</div>
+            <div class="ch-tags">
+              <span class="ch-tag" style="background:rgba(255,215,0,0.1);color:#FFD700;">SMC</span>
+              <span class="ch-tag" style="background:rgba(255,215,0,0.1);color:#FFD700;">Price Action</span>
+            </div>
+          </div>
+          <div class="ch-level-badge" style="background:rgba(0,204,102,0.12);color:#00CC66;">⭐ ناوەند</div>
+        </div>
+
+        <div class="channel-card" data-level="mid">
+          <div class="ch-avatar" style="background:rgba(0,230,118,0.1)">📡</div>
+          <div class="ch-info">
+            <div class="ch-name">ForexSignals TV</div>
+            <div class="ch-creator">ForexSignals • ٨٠٠ک بەشداربوو</div>
+            <div class="ch-desc">لایڤ ئەنالیزی ڕۆژانە و فێربوون لەگەڵ — بازاڕ ببینە و فێربێ</div>
+            <div class="ch-tags">
+              <span class="ch-tag" style="background:rgba(0,230,118,0.1);color:#00E676;">Live</span>
+              <span class="ch-tag" style="background:rgba(0,230,118,0.1);color:#00E676;">Analysis</span>
+            </div>
+          </div>
+          <div class="ch-level-badge" style="background:rgba(0,204,102,0.12);color:#00CC66;">⭐ ناوەند</div>
+        </div>
+
+        <div class="channel-card" data-level="mid">
+          <div class="ch-avatar" style="background:rgba(255,136,0,0.1)">📓</div>
+          <div class="ch-info">
+            <div class="ch-name">No Nonsense Forex</div>
+            <div class="ch-creator">VP • ٣٠٠ک بەشداربوو</div>
+            <div class="ch-desc">سیستەمی تریدی کامل — Risk Management و سیستەم دروست کردن فێر دەکات</div>
+            <div class="ch-tags">
+              <span class="ch-tag" style="background:rgba(255,136,0,0.1);color:#FF8800;">System</span>
+              <span class="ch-tag" style="background:rgba(255,136,0,0.1);color:#FF8800;">Risk Mgmt</span>
+            </div>
+          </div>
+          <div class="ch-level-badge" style="background:rgba(255,136,0,0.12);color:#FF8800;">⭐⭐ ناوەند+</div>
+        </div>
+
+        <div class="channel-card" data-level="mid">
+          <div class="ch-avatar" style="background:rgba(68,136,255,0.1)">📊</div>
+          <div class="ch-info">
+            <div class="ch-name">TraderNick</div>
+            <div class="ch-creator">Nick • ٢٠٠ک بەشداربوو</div>
+            <div class="ch-desc">جێرناڵی تریدی ئاشکرا — فێربە چۆن تریدەکانت ئەنالیز بکەی</div>
+            <div class="ch-tags">
+              <span class="ch-tag" style="background:rgba(68,136,255,0.1);color:#448AFF;">Journal</span>
+              <span class="ch-tag" style="background:rgba(68,136,255,0.1);color:#448AFF;">Analysis</span>
+            </div>
+          </div>
+          <div class="ch-level-badge" style="background:rgba(0,204,102,0.12);color:#00CC66;">⭐ ناوەند</div>
+        </div>
+
+        <div class="channel-card" data-level="advanced">
+          <div class="ch-avatar" style="background:rgba(170,68,255,0.1)">🏦</div>
+          <div class="ch-info">
+            <div class="ch-name">ICT — Inner Circle Trader</div>
+            <div class="ch-creator">Michael Huddleston • ٥٠٠ک+</div>
+            <div class="ch-desc">دامەزرێنەری Smart Money Concepts — بانکەکان چۆن مووڤ دەکەن</div>
+            <div class="ch-tags">
+              <span class="ch-tag" style="background:rgba(170,68,255,0.1);color:#AA44FF;">SMC Creator</span>
+              <span class="ch-tag" style="background:rgba(170,68,255,0.1);color:#AA44FF;">Advanced</span>
+            </div>
+          </div>
+          <div class="ch-level-badge" style="background:rgba(170,68,255,0.12);color:#AA44FF;">⭐⭐ پێشکەوتوو</div>
+        </div>
+
+        <div class="channel-card" data-level="advanced">
+          <div class="ch-avatar" style="background:rgba(170,68,255,0.1)">🧠</div>
+          <div class="ch-info">
+            <div class="ch-name">Mentfx</div>
+            <div class="ch-creator">Ment • ٣٠٠ک بەشداربوو</div>
+            <div class="ch-desc">ICT کۆنسێپت + پسیکۆلۆژی تریدینگ — ذهنیەتی تریدەری باش</div>
+            <div class="ch-tags">
+              <span class="ch-tag" style="background:rgba(170,68,255,0.1);color:#AA44FF;">ICT</span>
+              <span class="ch-tag" style="background:rgba(170,68,255,0.1);color:#AA44FF;">Psychology</span>
+            </div>
+          </div>
+          <div class="ch-level-badge" style="background:rgba(170,68,255,0.12);color:#AA44FF;">⭐⭐ پێشکەوتوو</div>
+        </div>
+
+        <div class="channel-card" data-level="pro">
+          <div class="ch-avatar" style="background:rgba(255,215,0,0.1)">🏆</div>
+          <div class="ch-info">
+            <div class="ch-name">Anton Kreil — ITPM</div>
+            <div class="ch-creator">Anton Kreil • Goldman Sachs کارکردووە</div>
+            <div class="ch-desc">پیشەییترین مامۆستای فۆرێکس لە یوتیوب — ئینستیتیوشناڵ تریدینگ</div>
+            <div class="ch-tags">
+              <span class="ch-tag" style="background:rgba(255,215,0,0.1);color:#FFD700;">Institutional</span>
+              <span class="ch-tag" style="background:rgba(255,215,0,0.1);color:#FFD700;">Pro</span>
+            </div>
+          </div>
+          <div class="ch-level-badge" style="background:rgba(255,215,0,0.12);color:#FFD700;">👑 پرۆ</div>
+        </div>
+
+        <div class="channel-card" data-level="pro">
+          <div class="ch-avatar" style="background:rgba(255,215,0,0.1)">📐</div>
+          <div class="ch-info">
+            <div class="ch-name">Stacey Burke Trading</div>
+            <div class="ch-creator">Stacey Burke • ٢٠+ ساڵ ئەزموون</div>
+            <div class="ch-desc">پرایس ئەکشنی خاڵص — بەبێ ئیندیکاتەر، تریدینگی پیشەیی</div>
+            <div class="ch-tags">
+              <span class="ch-tag" style="background:rgba(255,215,0,0.1);color:#FFD700;">Pure PA</span>
+              <span class="ch-tag" style="background:rgba(255,215,0,0.1);color:#FFD700;">20yr exp</span>
+            </div>
+          </div>
+          <div class="ch-level-badge" style="background:rgba(255,215,0,0.12);color:#FFD700;">👑 پرۆ</div>
+        </div>
+
+        <div class="channel-card" data-level="pro">
+          <div class="ch-avatar" style="background:rgba(0,230,118,0.1)">🎯</div>
+          <div class="ch-info">
+            <div class="ch-name">Kharitonov Trading</div>
+            <div class="ch-creator">Kharitonov • ١٠٠ک بەشداربوو</div>
+            <div class="ch-desc">ملتی تایمفریم، بریکی ستراکتچەر، زۆنەکانی لیکوئیدیتی</div>
+            <div class="ch-tags">
+              <span class="ch-tag" style="background:rgba(0,230,118,0.1);color:#00E676;">Liquidity</span>
+              <span class="ch-tag" style="background:rgba(0,230,118,0.1);color:#00E676;">Structure</span>
+            </div>
+          </div>
+          <div class="ch-level-badge" style="background:rgba(255,215,0,0.12);color:#FFD700;">👑 پرۆ</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== RULES ===== -->
+    <div class="page" id="page-rules">
+      <div class="rules-header">
+        <div class="rules-title">⚡ یاساکانی زێڕین</div>
+        <div class="rules-sub">ئەمانە نەبووی — هەرگیز تریدەری باش نابیت</div>
+      </div>
+
+      <div class="warning-banner">
+        <div class="warning-banner-icon">🚨</div>
+        <div class="warning-banner-text">
+          <strong>ئاگاداری گرنگ!</strong>
+          تا ٦ مانگ فێربوون — هەرگیز دراوی ڕاستەقینە نەخە بازاڕ. تەنها Demo Account بکارببە!
+        </div>
+      </div>
+
+      <div class="rule-big" style="animation-delay:0.1s">
+        <div class="rule-big-icon" style="background:rgba(0,230,118,0.1)">📔</div>
+        <div class="rule-big-content">
+          <div class="rule-big-title">١. جێرناڵ بنووسە — هەر ڕۆژ</div>
+          <div class="rule-big-desc">هەر تریدێک تۆمار بکە. چرا داخل بوویت؟ چی بوو؟ چی فێربوویت؟ بەبێ جێرناڵ — پێشکەوتن نییە.</div>
+        </div>
+      </div>
+
+      <div class="rule-big" style="animation-delay:0.15s">
+        <div class="rule-big-icon" style="background:rgba(255,68,68,0.1)">🛡️</div>
+        <div class="rule-big-content">
+          <div class="rule-big-title">٢. ڕیسک ١-٢٪ تەنها</div>
+          <div class="rule-big-desc">هەرگیز زیاتر لە ٢٪ی ئەکاونتت لە یەک تریددا مەخە. ئەمە یاسای ژمارە یەکەی بازاڕە.</div>
+        </div>
+      </div>
+
+      <div class="rule-big" style="animation-delay:0.2s">
+        <div class="rule-big-icon" style="background:rgba(68,136,255,0.1)">🧪</div>
+        <div class="rule-big-content">
+          <div class="rule-big-title">٣. Backtest پێش هەر شتێک</div>
+          <div class="rule-big-desc">پێش ئەنجامدانی ستراتیژییەکت لە لایڤ — خەریکی ١٠٠ تریدی مێژوویی بکە. ئیدیا خاوەن سیستەم بکە.</div>
+        </div>
+      </div>
+
+      <div class="rule-big" style="animation-delay:0.25s">
+        <div class="rule-big-icon" style="background:rgba(255,215,0,0.1)">🧠</div>
+        <div class="rule-big-content">
+          <div class="rule-big-title">٤. پسیکۆلۆژی = ٥٠٪ی تریدینگ</div>
+          <div class="rule-big-desc">ئەگەر هەیجان هەیتی، ترسانی، یان پشیمانی — تریدی نەکە. بازاڕ هەمیشە هەیە، دراوەکەت نا!</div>
+        </div>
+      </div>
+
+      <div class="rule-big" style="animation-delay:0.3s">
+        <div class="rule-big-icon" style="background:rgba(170,68,255,0.1)">📵</div>
+        <div class="rule-big-content">
+          <div class="rule-big-title">٥. سیگناڵ کەناڵەکان بۆ فێربوونە</div>
+          <div class="rule-big-desc">سیگناڵەکان کۆپی مەکە. بیکارببە بۆ فێربوون و تەحلیل. تریدەرانی مووفەق سیستەمی خۆیانیانە.</div>
+        </div>
+      </div>
+
+      <div class="rule-big" style="animation-delay:0.35s">
+        <div class="rule-big-icon" style="background:rgba(255,136,0,0.1)">⏰</div>
+        <div class="rule-big-content">
+          <div class="rule-big-title">٦. ئامانجی درێژخایەن بگرە</div>
+          <div class="rule-big-desc">کەسانی کە دەڵێن "لە ٦ مانگ باشم کردووم" — زۆریان درۆن. ٢-٣ ساڵی پیشەیی دەوێ. لێواندن = سەرکەوتن.</div>
+        </div>
+      </div>
+
+      <div class="rule-big" style="animation-delay:0.4s">
+        <div class="rule-big-icon" style="background:rgba(0,230,118,0.1)">📈</div>
+        <div class="rule-big-content">
+          <div class="rule-big-title">٧. هەر ڕۆژ ئەرکەکانت بکە</div>
+          <div class="rule-big-desc">باشترین تریدەرانی جیهان هەر ڕۆژ فێر دەبن. ئاستت ٠ بێت یان ١٠٠ — پابەند بە، بەردەوام بە.</div>
+        </div>
+      </div>
+
+      <div style="text-align:center; padding: 25px 20px; color: var(--muted); font-size:0.82rem;">
+        <div style="font-size:1.5rem; margin-bottom:8px;">👑</div>
+        <div style="font-weight:800; color:var(--gold); font-size:1rem; margin-bottom:5px;">سافین ئەکرێ → باشترین تریدەری جیهان</div>
+        هەر ئەمڕۆ دەست پێ بکە
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="switchPage('home', this)">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-label">ماڵەوە</div>
+    </div>
+    <div class="nav-item" onclick="switchPage('road', this)">
+      <div class="nav-icon">🗺️</div>
+      <div class="nav-label">ڕێڕەو</div>
+    </div>
+    <div class="nav-item" onclick="switchPage('channels', this)">
+      <div class="nav-icon">📺</div>
+      <div class="nav-label">کەناڵ</div>
+    </div>
+    <div class="nav-item" onclick="switchPage('rules', this)">
+      <div class="nav-icon">⚡</div>
+      <div class="nav-label">یاسا</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Clock
+function updateClock() {
+  const now = new Date();
+  const h = now.getHours().toString().padStart(2,'0');
+  const m = now.getMinutes().toString().padStart(2,'0');
+  document.getElementById('clock').textContent = h + ':' + m;
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// Date
+const days = ['یەکشەممە','دووشەممە','سێشەممە','چوارشەممە','پێنجشەممە','هەینی','شەممە'];
+const months = ['١','٢','٣','٤','٥','٦','٧','٨','٩','١٠','١١','١٢'];
+const now = new Date();
+document.getElementById('today-date').textContent = days[now.getDay()] + ' ' + now.getDate() + '/' + months[now.getMonth()];
+
+// Page switching
+function switchPage(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  el.classList.add('active');
+}
+
+// Stage toggle
+function toggleStage(el) {
+  el.classList.toggle('open');
+}
+
+// Task toggle
+let doneCount = 0;
+function toggleTask(el) {
+  const check = el.querySelector('.task-check');
+  const text = el.querySelector('.task-text');
+  const isDone = check.classList.contains('done');
+  if (isDone) {
+    check.classList.remove('done');
+    check.textContent = '✓';
+    text.classList.remove('done');
+    doneCount = Math.max(0, doneCount - 1);
+  } else {
+    check.classList.add('done');
+    check.textContent = '✓';
+    text.classList.add('done');
+    doneCount++;
+  }
+  document.getElementById('done-count').textContent = toArabicNum(doneCount);
+}
+
+function toArabicNum(n) {
+  return n.toString().replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+}
+
+// Channel filter
+function filterChannels(level, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.channel-card').forEach(card => {
+    if (level === 'all' || card.dataset.level === level) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+</script>
+</body>
+</html>
